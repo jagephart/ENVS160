@@ -1,0 +1,181 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Overview
+In this course, you will learn some very basic coding in R. Rather than work in the R program on your computer, I have designed all exercises to be done in a web browser like this one. You will be able to type code in exercises and click run to see the output. In some cases, I will include a "hint" or "solution" button for you to view. There will also be some quiz questions for you to test your knowledge. 
+
+Each tutorial will be accompanied by a worksheet. You can find the worksheet on Blackboard and will also turn the worksheet in via Blackboard. 
+
+Although learning to code is not a primary goal of this course, it is important to learn some basics 1) because coding is increasingly important in all science (and many non-science) fields, and 2) it allows you to work with functions and data to reinforce concepts in this course. I will try to include all information necessary to complete the exercises within these tutorials, so be sure to read through the tutorial carefully. However, don't hesitate to Google questions or ask me if you run into an error or an issue. Solving errors is a natural part of learning to code!
+
+In this exercise, you will:
+
+* Learn how to use basic mathematical operators in R
+* Save numbers to named objects
+* Complete calculations with named objects
+
+## Mathematical Operators
+
+### Running code
+
+Below, I have typed the code for adding 2 and 3. Hit run to see the result. 
+
+```{r two-plus-three, exercise=TRUE}
+2+3
+```
+
+You should have seen the output "5". Now, replace "2+3" with your own addition, subtraction, multiplication or division using:
+
+* \+\  for addition
+* \-\  for subtraction
+* \*\  for multiplication
+* /  for division
+* ^  for and exponent
+
+See more operators here: <https://www.datamentor.io/r-programming/operator/>
+
+You can click the "Start Over" button to return the code to its original starting point. This will be useful if I provide code for you to build off of and you want to restart the problem. 
+
+Note: It you want to write more than one equation or have R do more than one step, just write each code step as a separate line. 
+
+### Question 1
+
+Calculate the area of a circle with a diameter of 10. Note the area of a circle is pi*r^2, where pi is approximated by 3.14. 
+
+```{r Q1, exercise=TRUE}
+
+```
+
+### Question 2
+
+The mean crown radius (MCR; a measure of the leafy part of trees) can be estimated from the size of the trunk (measured as the diameter of the trunk at breast height; DBH). One study found the following linear relationship:MCR = 1.61597 + 0.06395*DBH for the American Elm. What MCR would you expect for an American Elm tree with DBH = 0.8 m? 
+
+
+```{r Q2, exercise=TRUE}
+
+```
+
+## Saving Values
+
+You can save a number/word, series of numbers/words (a vector) or the result of a calculation(s) to a named object, which we will call a variable. To do this, choose something to name your variable and use the arrow "<-" to assign a number, word, or vector to the word. Storing numbers as words makes it easy to use the same variable at multiple points in a calculations and makes it easy to update a calculation with a new number. 
+
+You can name variables whatever you want, but it should start with a letter and you should avoid overwriting something else. For example, don't name something a common function, like "mean" or a logical operator, like "TRUE".
+
+Note: R is case-sensitive, so if you name a variable "trees" and later try to use this variable, but type "Trees" it will give you an error that it does not know what "Trees" is. This is a very common error that arises from capitalization issues (or typos). 
+
+
+### Example assigning numbers to names of insects
+Below, we are creating a variable "beetles" and assigning the number 5 to it. We are also creating the variable "butterflies" and assigning the number 6 to it. 
+
+Go ahead and hit "Run." Note that you will not see any output. All this did was create those two objects. If you want to see the results, type "beetles" or "butterflies" below where they are created and hit "Run." To see the output of both, type "beetles" and the "butterflies" on separate lines and hit "Run."
+
+You can also change the numbers to observe how this changes the output. 
+
+```{r Q3, exercise=TRUE}
+beetles <- 5
+butterflies <- 6
+
+```
+
+
+## Calculations with variables
+
+As pointed out in the last section, the purpose of assigning a number to a variable is to make it easy to reuse a variable multiple times and to make it transparent what each number in an equation represents. After you have saved a number as a variable, you can use it in equations. 
+
+### Example calculations with insects
+
+Below, you can see an example where we add the numbers of beetles and butterflies. You can hit run to see the result. Following this example, find the difference between the number of butterflies and beetles. 
+
+Note: The "#" sign at the begining of a line indicates that this is text, rather than code. This is helpful for annotating your code. You can type anything you want in comments and as long as the line starts with "#", R will not evaluate it.
+
+```{r Q4, exercise=TRUE}
+beetles <- 5
+butterflies <- 6
+# Add number of beetles and number of butterflies
+beetles + butterflies
+
+```
+
+
+### Example of using variables to create new variables
+
+You can save the result of a calculation to a new variable. Run the code below to create "insects" as the sum of beetles and butterflies. Add a new line that says "insects" if you want to see the result. 
+
+You can now use the variable "insects" in math. Use this to calculate 5.5 times the total number of insects. 
+
+```{r Q5, exercise=TRUE}
+beetles <- 5
+butterflies <- 6
+# Save the total number of insects 
+insects <- beetles + butterflies
+
+```
+
+
+### Calculations with varibles
+
+Using what you learned above, use the variable names to calculate the percent of insects that are butterflies. 
+
+```{r Q6, exercise=TRUE}
+beetles <- 5
+butterflies <- 6
+# Save the total number of insects 
+insects <- beetles + butterflies
+
+```
+
+```{r Q6-solution}
+beetles <- 5
+butterflies <- 6
+# Save the total number of insects 
+insects <- beetles + butterflies
+
+(100*butterflies)/insects
+```
+
+```{r quiz}
+quiz(
+  question("If a new survey finds 31 beetles and 78 butterflies, what percent of the insects are now butterflies?",
+    answer("61.2"),
+    answer("54.5"),
+    answer("71.6", correct = TRUE),
+    answer("75.8")
+  ))
+```
+
+
+## Calculating grades
+
+Now, let's use what we just learned to calculate your hypothetical grade in this class using by assigning points to each variable. The total number of points is currently set to 100% on all assignments. Run this to see that the final grade calculated equals 100%. 
+
+Change the values of points to see how the final grade changes if someone receives 82 points on midterm_1, 88 points on midterm_2, 120 points on the final, and 35 points on quant_skills (keep all other grades at 100% of the possible points). 
+
+Now, consider each assignment and set a realistic grade goal for yourself to calculate your anticipated grade in this course (Note: you can reset the code to 100% on all assignments by clicking "Start Over"). 
+
+```{r Q7, exercise=TRUE}
+midterm_1 <- 100
+midterm_2 <- 100
+final <- 150
+quiz <- 60
+office_hours <- 20
+quant_skills <- 50
+R_assign <- 50
+discuss_lead <- 50
+discuss_reflection <- 80
+discuss_nonlead <- 70
+discuss_online <- 20
+lab <- 250
+
+final_grade <- 100*(midterm_1 + midterm_2 + final + quiz + office_hours + quant_skills + R_assign + discuss_lead + discuss_reflection + discuss_nonlead + discuss_online + lab)/1000
+
+final_grade
+```
+
