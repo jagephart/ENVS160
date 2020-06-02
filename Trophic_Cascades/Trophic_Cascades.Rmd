@@ -1,0 +1,244 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(shiny)
+library(ggplot2)
+library(tidyverse)
+library(ggthemes)
+
+# Enter data
+df <- data.frame(Group = c("Piscivore", "Planktivore", "Zooplankton", "Phytoplankton"),
+                 Biomass = c(50, 250, 1250, 5000),
+                 Data = rep("Baseline", 4))
+
+# Write trophic cascade functions
+TC_Piscivore <- function(Piscivore){
+  Planktivore <- (-Piscivore+100)*5
+  Zooplankton <- Piscivore*25
+  Phytoplankton <- (-Piscivore+100)*100
+  
+  return(data.frame(Group = c("Piscivore", "Planktivore", "Zooplankton", "Phytoplankton"),
+                    Biomass = c(Piscivore, Planktivore, Zooplankton, Phytoplankton), 
+                    Data = rep("Scenario", 4)))
+}
+
+TC_Nutrient <- function(Nutrient){
+  Phytoplankton <- Nutrient*1000
+  Zooplankton <- Phytoplankton*0.25
+  Planktivore <- ((-0.1097*Nutrient^2)+(5.3709*Nutrient)-18.382)*43.65
+  Piscivore <- ((-0.1097*Nutrient^2)+(5.3709*Nutrient)-18.382)*8.8
+  
+  return(data.frame(Group = c("Piscivore", "Planktivore", "Zooplankton", "Phytoplankton"),
+                    Biomass = c(Piscivore, Planktivore, Zooplankton, Phytoplankton), 
+                    Data = rep("Scenario", 4)))
+}
+
+TC_Phytoplankton <- function(Phytoplankton){
+  Zooplankton <- Phytoplankton*0.25
+  Planktivore <- Phytoplankton*0.05
+  Piscivore <- Phytoplankton*0.01
+  
+  return(data.frame(Group = c("Piscivore", "Planktivore", "Zooplankton", "Phytoplankton"),
+                    Biomass = c(Piscivore, Planktivore, Zooplankton, Phytoplankton), 
+                    Data = rep("Scenario", 4)))
+}
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Background
+Lake Pace is located in a farming community in Minnesota. It is 30 acres in size with a four trophic level food web. The structure of this food web can be affected by various perturbations such as: overfishing, adding (stocking) fish, fertilizer pollution from run-off, and invasive species. Such environmental changes can affect the food web in ways that affect the environmental quality of the lake and reduce the ways that the lake benefits humans (called ecosystem services), such as providing food and recreation. In this activity, you will examine how human-caused environmental changes affect the food web of Lake Pace using a simple computer spreadsheet model that you can manipulate. Models are often used in research to manipulate data and make predictions. Complete these scenarios to gain an understanding of what is happening and think about what these changes mean for the system. Imagine that you will be providing a report to the Lake Pace Association on how these scenarios may affect their system and what management strategies will work best. 
+
+We will be looking at a simplified food chain model for Lake Pace. In other systems, many species can occupy each trophic level, creating a more complicated food web of interactions. Examine the food chain model below. In Lake Pace, phytoplankton are the primary producers. Zooplankton are the primary consumers, that is, they eat the primary producers. The zooplankton community in Lake Pace is exclusively comprised of grazer species that consume phytoplankton. A planktivorous fish that consumes zooplankton occupies the third trophic level. The top predator feeds on the planktivores and is referred to as a piscivore. We can represent the biomass of each trophic level on either a linear scale, or a logarithmic scale. Take a moment to recall how logarithms work:
+
+$$y = 10^x$$
+is the same as
+$$log_{10}(y)=x$$
+Log-scales are commonly used to represent values that vary dramatically in magnitude. In this case, the biomass of phytoplankton is so much larger than the biomass of the top-predator that if we use a linear scale then we can barely see the smaller values on the same graph! Instead, we plot the log of the biomass values so that we can more easily see differences among the values, as shown in the two bar graphs below which present the same data. For this activity, we will be plotting biomass on a log-scale. Keep this in mind as you work through the scenarios. 
+
+![](images/trophic_cascade_fig1.png)
+
+## Instructions
+For each of the following four scenarios, first read the scenario description and record your hypothesis about what will happen to the biomass of other trophic levels on your worksheet. Then, change the biomass as instructed to simulate the scenario. Test several values and record your observations on the worksheet. Answer the the other worksheet questions. 
+
+See the glossary tab to learn about any terms that are unfamiliar.
+
+## Scenario 1: Overfishing
+ Many active fishermen live in the community near Lake Pace. The community has no fishing regulations in place; therefore, fishermen are able to take as many fish as they like year round. Eventually, this leads to declines in the population of the top predator. Different amounts of decrease in the top predator biomass will produce different effects. You should hypothesize about what effects, if any, different amounts of predator decline will have. Then alter the biomass of the piscivores to the low, middle, and high end of the range in the computer model. 
+
+```{r, echo=FALSE}
+numericInput("Piscivore1",
+                 "Removal of top predator: Piscivore Biomass (min=1, max=50)",
+                 min = 1,
+                 max = 50,
+                 value = 50)
+    
+# Show a plot of the generated distribution
+plotOutput("distPlot1")
+```
+
+```{r, context="server"}
+output$distPlot1 <- renderPlot({
+    # generate scenario data
+    out_df <- rbind(df, TC_Piscivore(input$Piscivore1))
+    out_df <- mutate(out_df, logBiomass = log(Biomass))
+    
+    # Correct factor level order
+    out_df$Group <- factor(out_df$Group, levels = c("Phytoplankton", "Zooplankton", "Planktivore", "Piscivore"))
+    
+    # draw the barplot
+    ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
+      geom_bar(stat='identity', position="dodge") +
+      coord_flip() +
+      theme_classic(base_size = 20) +
+      xlab("") +
+      ylab("log(Biomass)")
+    
+  })
+```
+
+
+## Scenario 2: Stocking fish
+After the numbers of top predators decline, fishermen petition the Lake Pace Association to stock the lake with more piscivorous fish. They hope this will improve their own catches, and boost tourism to the lake. This leads to an increase in piscivore biomass above normal levels. Hypothesize about the effects of piscivore biomass increase, and then change the biomass in the model to the low, middle and high end of the range in the model to see the effects.
+
+```{r, echo=FALSE}
+numericInput("Piscivore2", "Stocking a top predator: Piscivore Biomass (min=50, max=99)",
+             min = 50,
+             max = 99,
+             value = 50)
+    
+# Show a plot of the generated distribution
+plotOutput("distPlot2")
+```
+
+
+```{r, context="server"}
+output$distPlot2 <- renderPlot({
+    # generate scenario data
+    out_df <- rbind(df, TC_Piscivore(input$Piscivore2))
+    out_df <- mutate(out_df, logBiomass = log(Biomass))
+    
+    # Correct factor level order
+    out_df$Group <- factor(out_df$Group, levels = c("Phytoplankton", "Zooplankton", "Planktivore", "Piscivore"))
+    
+    # draw the barplot
+    ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
+      geom_bar(stat='identity', position="dodge") +
+      coord_flip() +
+      theme_classic(base_size = 20) +
+      xlab("") +
+      ylab("log(Biomass)")
+    
+  })
+```
+
+
+## Scenario 3: Fertilizer runoff 
+Farmers in the local community around Lake Pace apply fertilizer to help improve crop yields. Farmers grow a variety of crops including: corn, soybeans, apples, potatoes and carrots. Each spring farmers apply large amounts of fertilizer after planting seeds. However, since no plants have grown yet to take-up the fertilizer, there is excess fertilizer on the ground. After a precipitation event significant loads of fertilizer run off the fields into Lake Pace causing eutrophication. Hypothesize what the effects of this fertilizer addition on the lake will be, and then change the biomass to the low, middle and high end of the range in the model to see the effects.
+
+```{r, echo=FALSE}
+    numericInput("Nutrient",
+                 "Fertilizer Runoff: Nutrient loading (min=5, max=50)",
+                 min = 5,
+                 max = 50,
+                 value = 5)
+    
+    # Show a plot of the generated distribution
+    plotOutput("distPlot3")
+```
+
+```{r, context="server"}
+output$distPlot3 <- renderPlot({
+    # generate scenario data
+    out_df <- rbind(df, TC_Nutrient(input$Nutrient))
+    out_df <- mutate(out_df, logBiomass = log(Biomass))
+    
+    # Correct factor level order
+    out_df$Group <- factor(out_df$Group, levels = c("Phytoplankton", "Zooplankton", "Planktivore", "Piscivore"))
+    
+    # draw the barplot
+    ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
+      geom_bar(stat='identity', position="dodge") +
+      coord_flip() +
+      theme_classic(base_size = 20) +
+      xlab("") +
+      ylab("log(Biomass)")
+    
+  })
+```
+
+
+## Scenario 4: Invasive species
+Some boaters in the community travel to lakes around the country. After a summer vacation to Lake Huron, a boater returns with zebra mussels attached to his boat. He does not thoroughly check for and remove such “hitch-hikers” on the boat, equipment, and clothes. Then, when he puts the boat in Lake Pace the zebra mussels are released into the water and establish a population. These mussels are very efficient filter feeders and decrease the phytoplankton biomass drastically. Hypothesize what effects the invasive zebra mussel will have, and then change the biomass in the model to the low, middle and high end of the range to see the effects.
+
+```{r, echo=FALSE}
+numericInput("Phytoplankton",
+                 "Invasive Species: Phytoplankton Biomass (min=100, max=5000)",
+                 min = 100,
+                 max = 5000,
+                 value = 5000)
+    
+# Show a plot of the generated distribution
+plotOutput("distPlot4")
+```
+
+
+```{r, context="server"}
+output$distPlot4 <- renderPlot({
+    # generate scenario data
+    out_df <- rbind(df, TC_Phytoplankton(input$Phytoplankton))
+    out_df <- mutate(out_df, logBiomass = log(Biomass))
+    
+    # Correct factor level order
+    out_df$Group <- factor(out_df$Group, levels = c("Phytoplankton", "Zooplankton", "Planktivore", "Piscivore"))
+    
+    # draw the barplot
+    ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
+      geom_bar(stat='identity', position="dodge") +
+      coord_flip() +
+      theme_classic(base_size = 20) +
+      xlab("") +
+      ylab("log(Biomass)")
+    
+  })
+```
+
+## Glossary of Terms
+**Anthropogenic:** Changes or impacts to the environment caused by humans.
+
+**Biomass:** The total mass of organisms in a given area or volume.   
+
+**Bottom-up:** A manner of control within a system where changes are enacted at the “bottom” or lowest trophic level and the effects work their way up to the highest trophic level.
+
+**Ecosystem:** The living and non-living components of a spatially defined area of the environment where the components interact as a complex system.
+
+**Eutrophication:** The result of excessive nutrient loading that leads to algal blooms and impairment of water bodies, including low oxygen levels and reduced light.
+
+**Food Chain:** A linear version of a food web where producers and consumers are grouped into trophic levels related to their feeding abilities.
+
+**Food Web:** A method of diagramming the movement of nutrients and energy in an ecosystem via consumption; from plants or primary producers at the bottom to animal consumers at the top. 
+
+**Invasive species:** A non-native species that is introduced to a system it previously did not inhabit, which then reproduces and spreads. Invasive species may have negative effects on the systems in which they are introduced (note that not all introduced species become invasive). For example: zebra mussel (Dreissena polymorpha).
+
+**Logarithmic Base 10 Scale:** A non-linear scaling where each subsequent unit represents a 10-fold increase that is used to best represent a large range in values. 
+
+**Nutrient Loading:** The mass flux of nutrients entering a system over time.
+
+**Phytoplankton:** Aquatic microalgae that photosynthesize.
+
+**Piscivore:** An animal that primarily consumes fish. 
+
+**Planktivore:** An aquatic animal that primarily feeds on plankton. 
+
+**Plankton:** Small aquatic organisms that have a limited ability to swim against water currents. Plankton communities consist of both organisms that produce their own food (phytoplankton) and organisms that consume other organisms for food (zooplankton).
+
+**Top-down:** A manner of control within a system where changes are enacted at the “top” or highest trophic level and the effects work their way down to the lowest trophic level.
+
+**Trophic cascade:** The resulting effect of adding, removing or changing a component of the food web of an ecosystem whereby the effects propagate through the food web, altering the biomass of organisms at multiple levels.
+
+**Zooplankton:** Small planktonic animals that graze on water column phytoplankton. 
