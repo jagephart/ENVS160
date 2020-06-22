@@ -1,0 +1,134 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(cowsay)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+A function is a set of instructions, which takes an input and gives you an output. For example, a function called "add" might take two numbers as inputs and give you their sum as an output. There are some functions built into R, like "mean", which takes the mean of a set of numbers. See below that you can use the function "mean" by typing the function name, followed by parentheses. Inside the parentheses, you can indicate the "arguments". In this case, we have a vector of numbers 1, 2, 5, and 10, so the function will take the arithmatic mean: (1+2+5+10)/4
+
+Note: we can create a vector of numbers by typing c(), as below. 
+
+```{r exercise1, exercise=TRUE}
+mean(c(1,2,5,10))
+
+```
+
+You can change the numbers inside the vector (or add additional numbers) and re-run it to see how the mean changes. 
+
+You can find out what arguments any function takes by Googling it or by using the R help function.The easiest way to use R help is to type a question mark followed by the name of the function, for example:
+
+```{r exercise2, exercise=TRUE}
+?mean
+
+```
+
+You can also write your own functions, which is helpful for understanding how functions work. I will demonstrate this with a simple function, but I don't expect you to be able to write your own functions (we will just use existing functions or I will write the function for you). 
+
+This is a very basic function that will divide 2 numbers. First, I name the function (divide2), then I tell R I am writing a function by typing "function" and in the parentheses, I tell it what the arguments of the function should be (A and B in my case). This means that when we use the function, we want the user to specify the values of A and B. 
+
+After running code with a function, that function is saved and you can use it. 
+
+```{r exercise3, exercise=TRUE}
+divide2 <- function(A, B){
+  C <- A/B # Inside the brackets, I specify what I want R to do with A and B
+  return(C) # We end the statement by telling R what the function should spit out
+}
+
+divide2(3, 9)
+
+```
+
+Note: you can specify the arguments explicitly, and that is often useful. For example you could instead type: 
+divide2(A = 3, B = 9)
+
+If you do not name the arguments like this, R assumes you just put them in the order the function wrote them in. This means that you will get a different answer from 
+divide2(9, 3)
+
+But you can write them in any order if you name them. For example, you will get the original answer from:
+divide2(B = 9, A = 3)
+
+Feel free to try these out in the above code chunk to see how this works. 
+
+## Plotting function
+
+Functions don't only give numbers as outputs. They can also give words, evaluate logical statements as True/False, and create images. There are many functions in R for creating data visualizations. Here, we will use a basic funtion called plot, which takes the arguments "x" and "y", where x and y are vectors of numbers you want to plot as a scatterplot. The plot function also allows you to change the plot's appearance (e.g., change axes labels, change the plot symbol, change the point/line color, etc.). You can use the R help information or Google to learn more about changing these.
+
+Below, I created vectors based on the annual temperature anomaly and atmospheric CO2 concentrations for 1958-2019. 
+
+```{r exercise4, exercise=TRUE}
+temp_anomaly <- c(0.06,	0.03,	-0.02,	0.06,	0.04,	0.05,	-0.2,	-0.11,	-0.06,	-0.02,	-0.08,	0.05,	0.02,	-0.08,	0.01, 0.16,	-0.07,	-0.01,	-0.1,	0.18,	0.07,	0.16,	0.26,	0.32,	0.14,	0.31,	0.15,	0.11,	0.18,	0.32,	0.38, 0.27,	0.45,	0.4,	0.22,	0.23,	0.31,	0.44,	0.32,	0.46,	0.61,	0.39,	0.39,	0.54,	0.63,	0.62,	0.54,	0.68,	0.64,	0.66,	0.54,	0.66,	0.72,	0.61,	0.64,	0.68,	0.75,	0.9,	1.02,	0.92,	0.85,	0.98)
+
+CO2 <- c(232.27, 315.97,	316.91,	317.64,	318.45,	318.99,	214.41,	320.04,	321.38,	322.16,	323.05,	324.62,	325.68,	326.32,	327.45,	329.68,	330.18,	295.23,	332.04,	333.83,	335.40,	336.84,	338.75,	340.11,	341.45,	343.05,	307.42,	346.12, 347.42,	349.19,	351.57,	353.12,	354.39,	355.61,	356.45,	357.10,	358.83,	360.82,	362.61,	363.73,	366.70,	368.38, 369.55,	371.14,	373.28,	375.80,	377.52,	379.80,	381.90,	383.79,	385.60,	387.43,	389.90,	391.65,	393.85,	396.52, 398.65,	400.83,	404.24,	406.55,	408.52,	411.44)
+year <- c(1958:2019) # This is a shortcut for creating a vector with all of the integers between 1958 and 2019
+
+# We can create a plot of the CO2 concentration over time with:
+plot(x= year, y = CO2)
+```
+
+To change the color of the points, you can add col = "blue" so the code reads:
+plot(x= year, y = CO2, col = "blue") 
+
+For more color options, see: <http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf>
+
+To change from plotting as points (the default) to a line, add type = "l" so the code reads:
+plot(x= year, y = CO2, col = "blue", type = "l") 
+
+See the R help info for the plot function to view more options. 
+
+Try these making these changes and running the code chunk to view the result.
+
+## Packages
+
+A package in R is a set of functions (and sometimes also data and images). You can find lots of packages that users built by searching online. You can install a package by using the function "install.packages()". For example, there is a package called "cowsay", which will print out a picture of an animal saying whatever you specify by using the function say().
+
+If you were using a local version of R, you can install it by running: 
+install.packages("cowsay")
+
+Once a package is installed, you don't have to install it again, but you do need to load the package each time youopen a new R session by running: 
+library("cowsay")
+
+You do not need to install or load packages in this tutorial because I have already done that. 
+
+```{r exercise5, exercise=TRUE}
+say(what = "I <3 ENVS 160", by = "mushroom")
+
+```
+
+You can view more options by looking at the help (including how to change the text color and character color) by typing "?say" into the code chunk or Googling it. 
+
+### Modeling 
+As discussed in lecture, modeling can describe a broad range of scientific activities and these activities are often complimentary (e.g., drawing a conceptual model and building a mathematical model). When analyzing data, we often use statistical models and/or mechanistic models. Statistical models use mathematical expressions that best describe the data, while mechanistic models use mathematical expressions that best describe physical or biological processes. 
+
+For example, a straight line may do a good job explaining data on population growth for a data set, so that can serve as a good statistical model. However, we know that populations do not grow at a constant rate because: 1) more people can create more babies, which accelerates population growth, and; 2) there may be limits on how many people a place can sustain, preventing the infinite growth implied by a line. This would mean that a line is not a good mechanistic model of population growth. 
+
+Now let's use what we learned about functions to work with some basic models. Say we notice a new species of beetle has appeared in a forest and we collect data on the population size. We use the data to fit two models of population growth of the beetles based on the data. Assume we use this to create the following functions, which each takes the time as the input and returns the number of beetles at that time. 
+
+```{r exercise6, exercise=TRUE}
+model1 <- function(t){
+  n.beetles <- 35*t + 35
+  return(n.beetles)
+}
+
+model2 <- function(t){
+  n.beetles <- 1500/(1+exp(-(-2.4 + 0.1*t)))
+  return(n.beetles)
+}
+
+# We can plot these lines over time by first creating a vector of time points and saving the output from each function:
+time <- c(1:30)
+y.model1 <- model1(time)
+y.model2 <- model2(time)
+
+# Then, we use the plot function to plot each line:
+plot(time, y.model1, type = "l")
+lines(time, y.model2, col = "purple") # The "lines" function allows you to add a second line to the existing plot
+
+```

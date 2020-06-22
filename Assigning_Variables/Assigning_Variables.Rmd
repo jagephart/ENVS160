@@ -1,6 +1,7 @@
 ---
 title: "Tutorial"
 output: learnr::tutorial
+css: css/styles.css
 runtime: shiny_prerendered
 ---
 
@@ -56,7 +57,7 @@ Calculate the area of a circle with a diameter of 10. Note the area of a circle 
 
 ### Question 2
 
-The mean crown radius (MCR; a measure of the leafy part of trees) can be estimated from the size of the trunk (measured as the diameter of the trunk at breast height; DBH). One study found the following linear relationship:MCR = 1.61597 + 0.06395*DBH for the American Elm. What MCR would you expect for an American Elm tree with DBH = 0.8 m? 
+The mean crown radius (MCR; a measure of the leafy part of trees) can be estimated from the size of the trunk (measured as the diameter of the trunk at breast height; DBH). One study found the following linear relationship: MCR = 1.61597 + 0.06395*DBH for the American Elm. What MCR would you expect for an American Elm tree with DBH = 1.2 m? 
 
 
 ```{r Q2, exercise=TRUE}
