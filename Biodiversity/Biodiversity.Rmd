@@ -1,0 +1,209 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+css: css/styles.css
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(palmerpenguins)
+library(ggplot2)
+library(tidyverse)
+library(vegan)
+library(ggthemes)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+In this exercise, you will explore different biodiversity measures using penguin data from the the Palmer Station Long Term Ecological Research Network. 
+
+The goals of this exercise are to:
+
+* Use biodiversity metrics with real data
+* Learn basic code management/manipulation functions from the tidyverse package
+* Modify code to create plots using the ggplot2 package
+
+Before we start working with the biodiversity functions, we are going to learn a few key things for working with data in R. 
+
+Since the package palmerpenguins is loaded, there is alread a data frame called "penguins" loaded. We can view the top of the data using head(penguins) and can summarize the data using str(penguins). When you run this, you will see the column names and types of data in each column. 
+
+```{r DataSummary, exercise = TRUE}
+head(penguins)
+str(penguins)
+```
+
+In R, you can select a single column by typing the name of the data frame, then $ followed by the name of the column. Running the code below, you can see the column of species printed out. Try modifying the code to view the column "island." 
+
+```{r DataColumns, exercise = TRUE}
+penguins$species
+
+```
+
+Using the plot function from the previous exercise, you can plot the flipped length (flipper_length_mm) versus the body mass (body_mass_g). 
+
+```{r DataScatter, exercise = TRUE}
+plot(x = penguins$flipper_length_mm, y = penguins$body_mass_g)
+
+```
+
+### tidyverse and ggplot2
+
+These are two very popular packages for working with data in R. They operate a little different than "base R." Key differences for the purposes of this class are:
+
+* Within functions from ggplot2 and tidyverse, you will just specify the data once and then can refer to the column names directly without writing the data frame name and $ each time.
+* When using functions from tidyverse, you can sting multiple together with the pipe symbol: %>% (example below)
+* When using ggplot, use the plus symbol to string together different functions that control how the plot looks (example below)
+
+You are not expected to learn how to write this code on your own in this class. The goal is for you to modify code that I provide so you can work with data. So pay attention to the patterns (e.g., where variables are placed within code) to modify it. 
+
+```{r tidyEx, exercise=TRUE}
+# This is an example of summarizing the data using tidyverse functions (with comments, indicated by #, throughout to help you see what each line is doing)
+Gentoo_sex_summary <- penguins %>% 
+  # Filter to keep only the rows where the species is Gentoo
+  filter(species == "Gentoo") %>%
+  # Group the data by sex so we can create summaries for male and female penguins separately
+  group_by(sex) %>%
+  # Calculate the mean bill length for male and female Gentoo penguins
+  summarise(ave_bill_length = mean(bill_length_mm))
+
+# View the resuls
+print(Gentoo_sex_summary)
+
+```
+
+```{r tidyEx-solution}
+island_weight_summary <- penguins %>%
+  group_by(island) %>%
+  summarise(ave_body_mass = mean(body_mass_g))
+
+print(island_weight_summary)
+
+```
+
+Now, try to modify the above code to calculate the mean body mass of all penguin species by island. After trying, check your answer by viewing the solution. 
+
+We will often use ggplot to visualize data, but again, I will generally give you the base code to modify. 
+
+```{r ggplotEx, exercise=TRUE}
+# Here is an example of making the same scatterplot as earlier, but with ggplot this time
+# ggplot() takes the arguments data and another function aes, where you specify the x and y (as well as some other things down the road)
+
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  # Here you add on geom_point to have it create a scatter plot
+  geom_point() +
+  # xlab and ylab let you customizt the x and y labels
+  xlab("Flipper length (mm)") +
+  ylab("Body mass (g)") +
+  # There are many build in themes. If you type "theme_", there will be an autofill that you can scroll through to view other options
+  theme_few()
+
+```
+
+You can view more themes here: <https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/>
+
+
+```{r ggplotEx-solution}
+ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  # Here you add on geom_point to have it create a scatter plot
+  geom_point() +
+  # xlab and ylab let you customizt the x and y labels
+  xlab("Bill length (mm)") +
+  ylab("Bill depth (mm)") +
+  # There are many build in themes. If you type "theme_", there will be an autofill that you can scroll through to view other options
+  theme_few()
+
+```
+
+Modify the above code to plot the bill length (bill_length_mm) versus the bill depth (bill_depth_mm). After trying, you can check your answer by viewing the solution. 
+
+If you want to learn more about tidyverse or ggplot, there are many free resources. These two cheet sheets are also very useful for learning about functions available in these packages:
+
+tidyverse cheat sheet - <https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf>
+
+ggplot2 cheat sheet - <https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf>
+
+
+The penguin data reference is:
+Gorman KB, Williams TD, Fraser WR (2014) Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9(3): e90081.<https://doi.org/10.1371/journal.pone.0090081>
+
+## Biodiversity metrics
+
+Below, we will compare the biodiversity of penguins on the three different islands using three different biodiversity metrics. 
+
+<center>
+![](images/lter_penguins.png){width="550" height="350"}
+
+Artwork by @allison_horst
+</center>
+
+### Species Richness
+
+The simplest biodiversity measure is species richness, $R$, which represents the count of species. We can easily count the number of species on each island using basic tidyverse functions. 
+
+```{r Richness, exercise=TRUE}
+penguins %>%   
+  group_by(island) %>%
+  summarise(count = n_distinct(species))
+
+```
+
+### Shannon–Weiner
+
+The Shannon-Weiner (also called Shannon-Weaver) index takes into account both the number of different species and their evenness. It is calculated as 
+$$H = -\sum_{i=1}^Sp_iln(p_i)$$
+where $i$ indexes the species, $S$ is the number of species and $p_i$ is the proportion of species $i$. 
+
+We could calculate this ourselves, but we will instead use the package vegan, which has many built in biodiversity measures within the function "diversity". The data has to be slightly reformatted to use the function. 
+
+```{r Shannon, exercise=TRUE}
+penguin_counts <- penguins %>%
+  filter(island == "Biscoe") %>%
+  select(species) %>% 
+  group_by(species) %>%
+  tally()
+  
+diversity(penguin_counts$n, index = "shannon")
+
+```
+
+Modify the code above to calculate the Shannon value for the other two islands. 
+
+### Simpson
+
+The Simpson index... It is calculated as:
+$$D = 1-\sum_{i=1}^Sp_i^2$$
+
+where $i$ indexes the species, $S$ is the number of species and $p_i$ is the proportion of species $i$. 
+
+```{r Simpson, exercise=TRUE}
+penguin_counts <- penguins %>%
+  filter(island == "Biscoe") %>%
+  select(species) %>% 
+  group_by(species) %>%
+  tally()
+  
+diversity(penguin_counts$n, index = "simpson")
+
+```
+
+Modify the code above to calculate the Simpson value for the other two islands. 
+
+## Plotting 
+
+Here we are going to explore a different visualization of the penguin data by plotting the number of individuals of each species on each island. Do do this, we will create a bar chart with the bars representing the number of individuals of each species, the color of the bar representing the species, and the x-axis noting the island. 
+
+```{r speciesBarplot, exercise = TRUE}
+# First, we create a new data frame with the counts of each species on each island
+island_counts <- penguins %>%
+  group_by(island, species) %>%
+  tally()
+
+# Now we will plot this data using ggplot and geom_bar
+ggplot(penguins, aes(island, fill = species)) +
+  geom_bar() +
+  theme_few()
+
+```
+
