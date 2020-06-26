@@ -12,6 +12,7 @@ library(ggplot2)
 library(tidyverse)
 library(vegan)
 library(ggthemes)
+library(beyonce)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -203,7 +204,9 @@ island_counts <- penguins %>%
 # Now we will plot this data using ggplot and geom_bar
 ggplot(penguins, aes(island, fill = species)) +
   geom_bar() +
+  scale_fill_manual(values = beyonce_palette(18)) +
   theme_few()
 
 ```
 
+You can view more options from the Beyoncé palette here: <https://github.com/dill/beyonce> 
