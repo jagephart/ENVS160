@@ -1,0 +1,162 @@
+---
+title: "Tutorial"
+output: learnr::tutorial
+css: css/styles.css
+runtime: shiny_prerendered
+---
+## Introduction
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(beyonce)
+
+CITES <- read.csv("CITES_trade_tutorial.csv")
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This tutorial builds on the skills from the previous tutorial for manipulating and visualizing data with the tidyverse and ggplot2 packages. Here, we will practice more ways to summarize and explore data in R. 
+
+In this tutorial, you will work with data on wildlife trade from CITES (<https://trade.cites.org/>). I have pre-filtered this data to include records from 2000-2017 for South American fur seals, leopards, American alligators, Aldabra giant tortoises and giant pangolins. This data has already been loaded into your workspace as a data frame called "CITES." 
+
+As a reminder, you can see what the data looks like by using str(CITES), which will list the columns and the data types, or head(CITES), which will show you the first 6 rows by default (you can change how many rows you view by adding n = x, where x is the number of rows you want to see). Try this below to familiarize yourself with the data sets. 
+
+Another useful function for exploring a data frame is the function unique(). This function gives you all of the unique items from a vector, which means you can use it to see the unique responses in a column. Try it below by typing unique(CITES$Taxon). You can feel free to also try it on other columns. 
+
+```{r data_summary, exercise=TRUE}
+# Use this code chunk to view summaries of the data frame
+```
+
+## Summarizing data
+
+From exploring the data in the previous section, you can see that this data has several different dimensions that we can summarize across: 
+
+* Year (column: "Year)
+* Species (column: "common_name" or "Taxon")
+* Type of traded product (column: "Term")
+* Importing country (column: "Importer")
+* Exporting country (column: "Exporter")
+
+Recall from the previous tutorial, that you can filter the data frame to specified observations (rows) using the function filter() and you can use group_by() followed by summarise() to create summaries by each group. Below is a series of examples to practice using these functions. 
+
+
+First, we will look at the top exporters of a species in a given year. To do this, we will use the same filter, group_by and summarize functions as before. We will also use a new function called top_n. To use top_n, you will specify which column to use to rank the data, and you will define n, the top number to return (set to 10 in the example below)
+
+Note: this is aggregating across terms, so it is adding across non-standarized units (e.g., adding live animals, animal skins, etc.). If you wanted to just look at one type, you could filter the "Term" column. 
+
+```{r filter_topn, exercise=TRUE}
+CITES %>% 
+  filter(Year == 2016) %>%
+  filter(common_name == "Leopard") %>%
+  group_by(Exporter) %>%
+  summarise(Quantity = sum(Quantity)) %>%
+  # Return the top n results (initially set to give the top 10)
+  top_n(Quantity, n = 10) %>%
+  # Sort the top n results in descending order
+  arrange(desc(Quantity))
+
+```
+
+Modify the code above to answer the following questions and test your understanding of these functions. 
+
+```{r quiz}
+quiz(
+  question("Which country was the top importer of leopards in 2010?",
+    answer("United States", correct = TRUE),
+    answer("New Zealand"),
+    answer("China"),
+    answer("France")
+  ),
+    question("Which country was the top exporter of American alligator in 2017?",
+    answer("United States"),
+    answer("South Africa"),
+    answer("Brazil"),
+    answer("France", correct = TRUE)
+    ),
+      question("Which country was the top importer of Giant pangolin across all years (hint: you will have to remove a line of code)?",
+    answer("United States"),
+    answer("New Zealand"),
+    answer("China", correct = TRUE),
+    answer("Uganda")
+  ))
+```
+
+## Plotting time series 
+
+Now, we will use the skills from the last section along with what we learned about ggplot to look at how trade of these species has changed over time. To do this, we will use a new function geom_line with ggplot and we will use groups within the plots to compare across groups. 
+
+### Total exports of live animals of the three species 
+
+First, if we want to look at the total exports of all three species from 2000-2017, we will first 
+
+```{r species_TS, exercise=TRUE}
+# Create a new data frame filtered/summarized to the way you want to plot it
+plot_df <- CITES %>%
+  filter(Term == "live") %>%
+  group_by(Year, common_name) %>%
+  summarise(Quantity = sum(Quantity))
+
+# Use this data frame with the ggplot function to create the time series
+ggplot(data = plot_df, aes(x = Year, y = Quantity, colour = common_name)) +
+  geom_line() +
+  scale_colour_manual(values = beyonce_palette(18)) +
+  theme_few()
+  
+```
+
+After running the code above, try modifying it to view the time series for other types by modifying the Term ==. Other Term options include: "scales", "skins" and "trophies" (recall you can run "unique(CITES$Term)" to view all options). 
+
+If you want to include more than one Term, you can use "Term %in% c()", where you list the options inside c(). For example, you can replace "Term == "live"" with "Term %in% c("scales", "leather items", "teeth")".
+
+### Live imports by the US
+
+We can plot the time series for a single importer or exporter by filtering the "Importer" or "Exporter" column. 
+
+```{r US_species_TS, exercise=TRUE}
+# Create a new data frame filtered/summarized to the way you want to plot it
+plot_df <- CITES %>%
+  filter(Term == "live") %>%
+  filter(Importer == "United States") %>%
+  group_by(Year, common_name) %>%
+  summarise(Quantity = sum(Quantity))
+
+# Use this data frame with the ggplot function to create the time series
+ggplot(data = plot_df, aes(x = Year, y = Quantity, colour = common_name)) +
+  geom_line() +
+  scale_colour_manual(values = beyonce_palette(18)) +
+  theme_few()
+  
+```
+
+### South American fur seal exports by country
+
+```{r SAFurSeal_TS, exercise=TRUE}
+# Create a new data frame filtered/summarized to the way you want to plot it
+plot_df <- CITES %>%
+  filter(common_name == "South American fur seal") %>%
+  # Note: we have to add exporter as a grouping variable to get the exports by country
+  group_by(Year, common_name, Exporter) %>%
+  summarise(Quantity = sum(Quantity)) %>%
+  # We will filter to only keep records greater than 10 so the plot isn't too cluttered
+  filter(Quantity > 10)
+  
+
+# Use this data frame with the ggplot function to create the time series
+# Note that the color now represents the exporting country
+ggplot(data = plot_df, aes(x = Year, y = Quantity, colour = Exporter)) +
+  geom_line() +
+  theme_few()
+  
+```
+
+## Student case study
+
+Go through the questions on the worksheet and use the space below to answer each question. 
+
+```{r case_study, exercise=TRUE}
+
+```
+
