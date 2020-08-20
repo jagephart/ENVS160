@@ -1,6 +1,7 @@
 ---
 title: "Tutorial"
 output: learnr::tutorial
+css: css/styles.css
 runtime: shiny_prerendered
 ---
 
@@ -12,9 +13,10 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Introduction
 
-A function is a set of instructions, which takes an input and gives you an output. For example, a function called "add" might take two numbers as inputs and give you their sum as an output. There are some functions built into R, like "mean", which takes the mean of a set of numbers. See below that you can use the function "mean" by typing the function name, followed by parentheses. Inside the parentheses, you can indicate the "arguments". In this case, we have a vector of numbers 1, 2, 5, and 10, so the function will take the arithmatic mean: (1+2+5+10)/4
+A function is a set of instructions, which takes an input and gives you an output. For example, a function called “add” might take two numbers as inputs and give you their sum as an output. There are some functions built into R, like “mean”, which takes the mean, or average, of a set of numbers. See below that you can use the function “mean” by typing the function name, followed by parentheses. Inside the parentheses, you can indicate the “arguments” and operations. In this case, the argument is a vector of numbers 1, 2, 5, and 10, so the function will output the arithmetic mean: (1+2+5+10)/4.
 
-Note: we can create a vector of numbers by typing c(), as below. 
+Note: we can create a vector of numbers by typing “c()”, as below. Test what happens when you don’t include the “c”.
+
 
 ```{r exercise1, exercise=TRUE}
 mean(c(1,2,5,10))
@@ -39,7 +41,7 @@ After running code with a function, that function is saved and you can use it.
 ```{r exercise3, exercise=TRUE}
 divide2 <- function(A, B){
   C <- A/B # Inside the brackets, I specify what I want R to do with A and B
-  return(C) # We end the statement by telling R what the function should spit out
+  return(C) # We end the statement by telling R what the function should return
 }
 
 divide2(3, 9)
@@ -49,8 +51,7 @@ divide2(3, 9)
 Note: you can specify the arguments explicitly, and that is often useful. For example you could instead type: 
 divide2(A = 3, B = 9)
 
-If you do not name the arguments like this, R assumes you just put them in the order the function wrote them in. This means that you will get a different answer from 
-divide2(9, 3)
+If you do not name the arguments like this, R assumes you just put them in the order the function wrote them in. This means that you will get a different answer if you wrote divide2(9, 3) as opposed to divide2(3,9). 
 
 But you can write them in any order if you name them. For example, you will get the original answer from:
 divide2(B = 9, A = 3)
@@ -59,7 +60,7 @@ Feel free to try these out in the above code chunk to see how this works.
 
 ## Plotting function
 
-Functions don't only give numbers as outputs. They can also give words, evaluate logical statements as True/False, and create images. There are many functions in R for creating data visualizations. Here, we will use a basic funtion called plot, which takes the arguments "x" and "y", where x and y are vectors of numbers you want to plot as a scatterplot. The plot function also allows you to change the plot's appearance (e.g., change axes labels, change the plot symbol, change the point/line color, etc.). You can use the R help information or Google to learn more about changing these.
+Functions don’t only return numbers as outputs. They can also returns words, evaluate logical statements as True/False, and create images. There are many functions in R for creating data visualizations. Here, we will use a basic function called plot, which takes the arguments “x” and “y” as inputs, where x and y are vectors of numbers you want to plot as a scatterplot. The plot function also allows you to change the plot’s appearance (e.g., change axes labels, change the plot symbol, change the point/line color). You can use the R help information or Google to learn more about changing these characteristics of the plot.
 
 Below, I created vectors based on the annual temperature anomaly and atmospheric CO2 concentrations for 1958-2019. 
 
@@ -83,7 +84,7 @@ plot(x= year, y = CO2, col = "blue", type = "l")
 
 See the R help info for the plot function to view more options. 
 
-Try these making these changes and running the code chunk to view the result.
+Try making these changes and running the code chunk to view the result.
 
 ## Packages
 
@@ -98,6 +99,8 @@ library("cowsay")
 You do not need to install or load packages in this tutorial because I have already done that. 
 
 ```{r exercise5, exercise=TRUE}
+# If this was run on your computer, you would have to install the package by running "install.packages(“cowsay”)". 
+# If you had already installed the package, you would need to load it by running "library(“cowsay”)"
 say(what = "I <3 ENVS 160", by = "mushroom")
 
 ```
@@ -105,13 +108,14 @@ say(what = "I <3 ENVS 160", by = "mushroom")
 You can view more options by looking at the help (including how to change the text color and character color) by typing "?say" into the code chunk or Googling it. 
 
 ### Modeling 
-As discussed in lecture, modeling can describe a broad range of scientific activities and these activities are often complimentary (e.g., drawing a conceptual model and building a mathematical model). When analyzing data, we often use statistical models and/or mechanistic models. Statistical models use mathematical expressions that best describe the data, while mechanistic models use mathematical expressions that best describe physical or biological processes. 
+As discussed in lecture, modeling can describe a broad range of scientific activities and these activities are often complementary (e.g., drawing a conceptual model and building a mathematical model). When analyzing data, we often use statistical models and/or mechanistic models. Statistical models use mathematical expressions that best describe the data, while mechanistic models use mathematical expressions that best describe physical or biological processes. 
 
 For example, a straight line may do a good job explaining data on population growth for a data set, so that can serve as a good statistical model. However, we know that populations do not grow at a constant rate because: 1) more people can create more babies, which accelerates population growth, and; 2) there may be limits on how many people a place can sustain, preventing the infinite growth implied by a line. This would mean that a line is not a good mechanistic model of population growth. 
 
 Now let's use what we learned about functions to work with some basic models. Say we notice a new species of beetle has appeared in a forest and we collect data on the population size. We use the data to fit two models of population growth of the beetles based on the data. Assume we use this to create the following functions, which each takes the time as the input and returns the number of beetles at that time. 
 
 ```{r exercise6, exercise=TRUE}
+#Define two functions, model1 and model2, that we want to plot over time.
 model1 <- function(t){
   n.beetles <- 35*t + 35
   return(n.beetles)

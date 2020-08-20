@@ -96,6 +96,7 @@ output$distPlot1 <- renderPlot({
     ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
       geom_bar(stat='identity', position="dodge") +
       coord_flip() +
+      ylim(c(0,10)) +
       theme_classic(base_size = 20) +
       xlab("") +
       ylab("log(Biomass)")
@@ -131,6 +132,7 @@ output$distPlot2 <- renderPlot({
     ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
       geom_bar(stat='identity', position="dodge") +
       coord_flip() +
+      ylim(c(0,10)) +
       theme_classic(base_size = 20) +
       xlab("") +
       ylab("log(Biomass)")
@@ -166,6 +168,7 @@ output$distPlot3 <- renderPlot({
     ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
       geom_bar(stat='identity', position="dodge") +
       coord_flip() +
+      ylim(c(0,10)) +
       theme_classic(base_size = 20) +
       xlab("") +
       ylab("log(Biomass)")
@@ -202,6 +205,7 @@ output$distPlot4 <- renderPlot({
     ggplot(out_df, aes(x = Group, y = logBiomass, fill= Data)) +
       geom_bar(stat='identity', position="dodge") +
       coord_flip() +
+      ylim(c(0,10)) +
       theme_classic(base_size = 20) +
       xlab("") +
       ylab("log(Biomass)")

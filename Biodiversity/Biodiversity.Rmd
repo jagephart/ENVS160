@@ -83,7 +83,7 @@ print(island_weight_summary)
 
 ```
 
-Now, try to modify the above code to calculate the mean body mass of all penguin species by island. After trying, check your answer by viewing the solution. 
+Now, try to modify the above code to calculate the mean body mass (body_mass_g) of all penguin species by island. After trying, check your answer by viewing the solution. Hint: Do you need to filter by any species here? What about group by a different column?
 
 We will often use ggplot to visualize data, but again, I will generally give you the base code to modify. 
 
@@ -117,7 +117,7 @@ ggplot(data = penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
 
 ```
 
-Modify the above code to plot the bill length (bill_length_mm) versus the bill depth (bill_depth_mm). After trying, you can check your answer by viewing the solution. 
+Modify the above code to plot the bill length (bill_length_mm) versus the bill depth (bill_depth_mm). After trying, you can check your answer by viewing the solution. Don’t forget to change the titles of the axes! 
 
 If you want to learn more about tidyverse or ggplot, there are many free resources. These two cheet sheets are also very useful for learning about functions available in these packages:
 
@@ -154,7 +154,7 @@ penguins %>%
 
 The Shannon-Weiner (also called Shannon-Weaver) index takes into account both the number of different species and their evenness. It is calculated as 
 $$H = -\sum_{i=1}^Sp_iln(p_i)$$
-where $i$ indexes the species, $S$ is the number of species and $p_i$ is the proportion of species $i$. 
+where $i$ indexes the species, $S$ is the number of species and $p_i$ is the proportion of species $i$, and *ln* is the natural logarithm. 
 
 We could calculate this ourselves, but we will instead use the package vegan, which has many built in biodiversity measures within the function "diversity". The data has to be slightly reformatted to use the function. 
 
@@ -173,7 +173,7 @@ Modify the code above to calculate the Shannon value for the other two islands.
 
 ### Simpson
 
-The Simpson index... It is calculated as:
+The Simpson index is a dominance index because it gives more weight to common or dominant species. This means that a few rare species will not change this diversity measure very much. It is calculated as:
 $$D = 1-\sum_{i=1}^Sp_i^2$$
 
 where $i$ indexes the species, $S$ is the number of species and $p_i$ is the proportion of species $i$. 

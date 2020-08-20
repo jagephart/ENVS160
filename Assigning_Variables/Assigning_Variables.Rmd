@@ -7,7 +7,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE) 
 ```
 
 ## Overview
@@ -23,23 +23,25 @@ In this exercise, you will:
 * Save numbers to named objects
 * Complete calculations with named objects
 
+Note: For the R exercises, you do not need R installed on your computer to work through these exercises, just a web browser and internet connection. Each tutorial is accompanied by a worksheet. You can find the worksheets on Blackboard. Please fill out the worksheet in Word as you go through the tutorial and then turn the completed worksheet in on Blackboard.
+
 ## Mathematical Operators
 
 ### Running code
 
-Below, I have typed the code for adding 2 and 3. Hit run to see the result. 
+Below, I have typed the code for adding 2 and 3. Hit “Run Code” to see the result. 
 
 ```{r two-plus-three, exercise=TRUE}
 2+3
 ```
 
-You should have seen the output "5". Now, replace "2+3" with your own addition, subtraction, multiplication or division using:
+You should have seen the output “5”. Now, replace “2+3” with your own operation for addition, subtraction, multiplication or division using:
 
 * \+\  for addition
 * \-\  for subtraction
 * \*\  for multiplication
 * /  for division
-* ^  for and exponent
+* ^  for an exponent
 
 See more operators here: <https://www.datamentor.io/r-programming/operator/>
 
@@ -72,6 +74,21 @@ You can name variables whatever you want, but it should start with a letter and 
 
 Note: R is case-sensitive, so if you name a variable "trees" and later try to use this variable, but type "Trees" it will give you an error that it does not know what "Trees" is. This is a very common error that arises from capitalization issues (or typos). 
 
+### Example assigning a word/words to a variable
+You can save words or a vector of words as a variable in R. When you type the variable name and run the code, it will return the word or words you specified. Variables will only return a result if you have defined them in some way (except for the rare built-in variables, like pi). 
+
+```{r Q3a, exercise=TRUE}
+# If you assign a value or word to "bug", it will return that when you run the word bug. For example,
+bug <- "lady bug"
+bug
+
+# You can also create a vector of words using c():
+bugs <- c("lady bug", "beetle", "butterfly")
+bugs
+
+# If you type a word, but have not assigned it a value or set of values, it will give you an error that basically says R doesn't know what you are asking for (Error: object 'bug' not found). To see this, after running the above code that works, try typing the word spider below and see what happens. 
+
+```
 
 ### Example assigning numbers to names of insects
 Below, we are creating a variable "beetles" and assigning the number 5 to it. We are also creating the variable "butterflies" and assigning the number 6 to it. 
@@ -80,7 +97,7 @@ Go ahead and hit "Run." Note that you will not see any output. All this did was 
 
 You can also change the numbers to observe how this changes the output. 
 
-```{r Q3, exercise=TRUE}
+```{r Q3b, exercise=TRUE}
 beetles <- 5
 butterflies <- 6
 
@@ -89,7 +106,7 @@ butterflies <- 6
 
 ## Calculations with variables
 
-As pointed out in the last section, the purpose of assigning a number to a variable is to make it easy to reuse a variable multiple times and to make it transparent what each number in an equation represents. After you have saved a number as a variable, you can use it in equations. 
+As pointed out in the last section, the purpose of assigning a number to a variable is to easily reuse a variable multiple times in calculations and to make it clear what each operation in an equation represents. For example, “5+6” could mean anything but “beetles + butterflies” helps us know right away that we are adding up the numbers of those two insects. 
 
 ### Example calculations with insects
 
@@ -100,8 +117,11 @@ Note: The "#" sign at the begining of a line indicates that this is text, rather
 ```{r Q4, exercise=TRUE}
 beetles <- 5
 butterflies <- 6
+
 # Add number of beetles and number of butterflies
 beetles + butterflies
+
+# Code below this line an equation that calculates the difference between the number of butterflies and beetles
 
 ```
 
@@ -110,7 +130,7 @@ beetles + butterflies
 
 You can save the result of a calculation to a new variable. Run the code below to create "insects" as the sum of beetles and butterflies. Add a new line that says "insects" if you want to see the result. 
 
-You can now use the variable "insects" in math. Use this to calculate 5.5 times the total number of insects. 
+You can now use the variable “insects” in equation. Use an equation to calculate 5.5 times the total number of insects below.
 
 ```{r Q5, exercise=TRUE}
 beetles <- 5
@@ -118,6 +138,7 @@ butterflies <- 6
 # Save the total number of insects 
 insects <- beetles + butterflies
 
+# Enter code below this line that calculate 5.5 times the total number of insects
 ```
 
 
@@ -130,6 +151,8 @@ beetles <- 5
 butterflies <- 6
 # Save the total number of insects 
 insects <- beetles + butterflies
+
+# Write code below this line to calculate the percent of insects that are butterflies using variable names
 
 ```
 
@@ -144,7 +167,7 @@ insects <- beetles + butterflies
 
 ```{r quiz}
 quiz(
-  question("If a new survey finds 31 beetles and 78 butterflies, what percent of the insects are now butterflies?",
+  question("If a new survey finds 31 beetles and 78 butterflies, what percent of the insects are now butterflies? Use your R code above to answer this question.",
     answer("61.2"),
     answer("54.5"),
     answer("71.6", correct = TRUE),
@@ -163,19 +186,15 @@ Now, consider each assignment and set a realistic grade goal for yourself to cal
 
 ```{r Q7, exercise=TRUE}
 midterm_1 <- 100
-midterm_2 <- 100
 final <- 150
-quiz <- 60
-office_hours <- 20
-quant_skills <- 50
-R_assign <- 50
-discuss_lead <- 50
-discuss_reflection <- 80
-discuss_nonlead <- 70
-discuss_online <- 20
-lab <- 250
+quiz <- 120
+office_hours <- 25
+quant_skills <- 25
+discussion_board <- 75
+worksheets <- 105
+lab <- 200
 
-final_grade <- 100*(midterm_1 + midterm_2 + final + quiz + office_hours + quant_skills + R_assign + discuss_lead + discuss_reflection + discuss_nonlead + discuss_online + lab)/1000
+final_grade <- 100*(midterm_1 + final + quiz + office_hours + quant_skills + discussion_board + worksheets + lab)/800
 
 final_grade
 ```

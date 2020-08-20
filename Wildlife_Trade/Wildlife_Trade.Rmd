@@ -22,7 +22,7 @@ This tutorial builds on the skills from the previous tutorial for manipulating a
 
 In this tutorial, you will work with data on wildlife trade from CITES (<https://trade.cites.org/>). I have pre-filtered this data to include records from 2000-2017 for South American fur seals, leopards, American alligators, Aldabra giant tortoises and giant pangolins. This data has already been loaded into your workspace as a data frame called "CITES." 
 
-As a reminder, you can see what the data looks like by using str(CITES), which will list the columns and the data types, or head(CITES), which will show you the first 6 rows by default (you can change how many rows you view by adding n = x, where x is the number of rows you want to see). Try this below to familiarize yourself with the data sets. 
+As a reminder, you can see what the data looks like by using str(CITES), which will list the columns and the data types, or head(CITES), which will show you the first 6 rows by default (you can change how many rows you view by adding  “, n = x” within the parentheses, where x is the number of rows you want to see). Try this below to familiarize yourself with the data sets.
 
 Another useful function for exploring a data frame is the function unique(). This function gives you all of the unique items from a vector, which means you can use it to see the unique responses in a column. Try it below by typing unique(CITES$Taxon). You can feel free to also try it on other columns. 
 
@@ -90,7 +90,7 @@ Now, we will use the skills from the last section along with what we learned abo
 
 ### Total exports of live animals of the three species 
 
-First, if we want to look at the total exports of all three species from 2000-2017, we will first 
+First, if we want to look at the total exports of live animals of all three species from 2000-2017, we will filter to "Term = "live", then group by the year and common name so that we can calculate the total quantity for each species in each year using "summarise(Quantity = sum(Quantity))".  
 
 ```{r species_TS, exercise=TRUE}
 # Create a new data frame filtered/summarized to the way you want to plot it
@@ -109,7 +109,7 @@ ggplot(data = plot_df, aes(x = Year, y = Quantity, colour = common_name)) +
 
 After running the code above, try modifying it to view the time series for other types by modifying the Term ==. Other Term options include: "scales", "skins" and "trophies" (recall you can run "unique(CITES$Term)" to view all options). 
 
-If you want to include more than one Term, you can use "Term %in% c()", where you list the options inside c(). For example, you can replace "Term == "live"" with "Term %in% c("scales", "leather items", "teeth")".
+If you want to include more than one Term, you can use “Term %in% c()”, where you list the options inside c(). For example, you can replace “Term ==”live"" with “Term %in% c(”scales“,”leather items“,”teeth“)”. Note: Copying from this text and pasting in the code box might not work because of different font characters, try retyping in the code box. 
 
 ### Live imports by the US
 
